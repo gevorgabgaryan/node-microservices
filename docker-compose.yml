@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  catalog:
+    build:
+      context: ./microservices/catalog-service
+    depends_on:
+      - mongodb
+    networks:
+      - mynetwork
+
+  auth:
+    build:
+      context: ./microservices/auth-service
+    depends_on:
+       - mongodb
+    networks:
+      - mynetwork
+    ports:
+     - "4004:4002"
+  redis:
+    image: redis:latest
+    networks:
+      - mynetwork
+
+  mongodb:
+    image: mongo:latest
+    env_file:
+      - .env.prod
+    networks:
+      - mynetwork
+    volumes:
+      - mongodb_data:/data/db
+
+  nginx:
+    build: ./proxy/
+    ports:
+      - "80:80"
+    depends_on:
+      - auth
+      - catalog
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+
+volumes:
+  postgres_data:
+  mongodb_data:

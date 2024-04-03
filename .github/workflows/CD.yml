@@ -16,44 +16,65 @@ jobs:
 
       - name: Generate and Upload .env File
         run: |
-          ssh -o "StrictHostKeyChecking=no" ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} "\
-            if [ ! -d Express-Auth-app ]; then \
-              echo 'Express-Auth-app directory does not exist. Cloning...'; \
-              git clone https://github.com/gevorgabgaryan/Express-Auth-app.git Express-Auth-app; \
-            fi; \
-            echo 'Creating .env file...'; \
-            cd Express-Auth-app && \
-            touch .env && \
-            echo PORT=${{ secrets.PORT }} >> .env && \
-            echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env && \
-            echo JWT_EXPIRE_IN=${{ secrets.JWT_EXPIRE_IN }} >> .env && \
-            echo MONGO_DB_URL=${{ secrets.MONGO_DB_URL }} >> .env && \
-            echo MONGO_DB_NAME=${{ secrets.MONGO_DB_NAME }} >> .env && \
-            echo MAIL_EMAIL=${{ secrets.MAIL_EMAIL }} >> .env && \
-            echo MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} >> .env && \
-            echo REDIS_URL=${{ secrets.REDIS_URL }} >> .env && \
-            echo NODE_ENV=production >> .env; \
-            echo '.env file created and populated.'\
+          ssh -o "StrictHostKeyChecking=no" ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} "
+            if [ ! -d Express-Auth-app ]; then
+              echo 'Express-Auth-app directory does not exist. Cloning...'
+              git clone https://github.com/gevorgabgaryan/Express-Auth-app.git Express-Auth-app
+            fi
+            echo 'Creating .env file...'
+            cd Express-Auth-app &&
+            touch .env &&
+            echo PORT=${{ secrets.PORT }} >> .env &&
+            echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env &&
+            echo JWT_EXPIRE_IN=${{ secrets.JWT_EXPIRE_IN }} >> .env &&
+            echo MONGO_DB_URL=${{ secrets.MONGO_DB_URL }} >> .env &&
+            echo MONGO_DB_NAME=${{ secrets.MONGO_DB_NAME }} >> .env &&
+            echo MAIL_EMAIL=${{ secrets.MAIL_EMAIL }} >> .env &&
+            echo MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} >> .env &&
+            echo REDIS_URL=${{ secrets.REDIS_URL }} >> .env &&
+            echo NODE_ENV=production >> .env
+            echo '.env file created and populated.'
           "
 
       - name: Generate and Upload .env Files for Microservices
         run: |
-          ssh -o "StrictHostKeyChecking=no" ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} "\
-            declare -A ports=( [auth-service]=${{ secrets.AUTH_PORT }} [catalog-service]=${{ secrets.CATALOG_PORT }} ); \
-            for service in auth-service catalog-service order-service; do \
-              if [ -d \$service ]; then \
-                echo 'Creating .env file in' \$service '...'; \
-                cd microservices/\$service; \
-                touch .env; \
-                echo PORT=\${ports[\$service]} >> .env; \
-                echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env; \
-                echo JWT_EXPIRE_IN=${{ secrets.JWT_EXPIRE_IN }} >> .env; \
-                echo MONGO_DB_URL=${{ secrets.MONGO_DB_URL }} >> .env; \
-                echo MONGO_DB_NAME=${{ secrets.MONGO_DB_NAME }} >> .env; \
-                echo WS_PORT=${{ secrets.WS_PORT }} >> .env; \
-                # Ensure all environment variables are correctly ended with >> .env; \
-                echo '...'; \
-              fi; \
-            done \
+          ssh -o "StrictHostKeyChecking=no" ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} "
+            declare -A ports=( [auth-service]=${{ secrets.AUTH_PORT }} [catalog-service]=${{ secrets.CATALOG_PORT }} )
+            for service in auth-service catalog-service order-service; do
+              if [ -d \$service ]; then
+                echo 'Creating .env file in' \$service '...'
+                cd microservices/\$service
+                touch .env
+                echo PORT=\${ports[\$service]} >> .env
+                echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+                echo JWT_EXPIRE_IN=${{ secrets.JWT_EXPIRE_IN }} >> .env
+                echo MONGO_DB_URL=${{ secrets.MONGO_DB_URL }} >> .env
+                echo MONGO_DB_NAME=${{ secrets.MONGO_DB_NAME }} >> .env
+                echo WS_PORT=${{ secrets.WS_PORT }} >> .env
+                echo REDIS_URL=${{ secrets.REDIS_URL }} >> .env
+                echo NODE_ENV=production >> .env
+                echo '.env file created and populated for ' \$service
+                cd ..
+              else
+                echo \$service 'directory does not exist. Skipping...'
+              fi
+            done
           "
 
+      - name: Pull latest changes and restart application
+        run: |
+          ssh -o "StrictHostKeyChecking=no" ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} "
+            if [ -d Express-Auth-app ] && [ -d Express-Auth-app/.git ]; then
+              echo 'Deploying application...'
+              cd Express-Auth-app &&
+              git pull &&
+              docker-compose up --build -d
+              echo 'Deployment complete.'
+            else
+              echo 'Express-Auth-app is not a valid Git repository. Cloning...'
+              git clone https://github.com/gevorgabgaryan/Express-Auth-app.git Express-Auth-app
+              cd Express-Auth-app &&
+              docker-compose up --build -d
+              echo 'Deployment complete.'
+            fi
+          "

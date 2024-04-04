@@ -1,0 +1,22 @@
+import { config as dotenvConfig } from 'dotenv';
+dotenvConfig();
+
+const instanceId = parseInt(process.env.NODE_APP_INSTANCE || '0', 10);
+const basePort = parseInt(process.env.PORT || '3115', 10);
+const baseWsPort = parseInt(process.env.WS_PORT || '1990', 10);
+
+const config = {
+  nodeEnv: process.env.NODE_ENV || 'development',
+  port: basePort + instanceId,
+  JWTSecret: process.env.JWT_SECRET || '',
+  JWTExpireIn: process.env.JWT_EXPIRE_IN,
+  mongoDB: {
+    url: process.env.MONGO_DB_URL || 'mongodb://localhost:27019',
+    dbName: process.env.MONGO_DB_NAME || 'CHAT',
+  },
+  defaultRoomId: '',
+  wsPort: baseWsPort + instanceId,
+  redisUrl: process.env.REDIS_URL || 'redis://localhost:8389',
+};
+
+export default config;

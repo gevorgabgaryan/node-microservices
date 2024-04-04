@@ -1,0 +1,57 @@
+https://docs.docker.com/language/nodejs/containerize/
+
+git clone https://github.com/docker/docker-nodejs-sample
+
+cd docker-nodejs-sample
+
+docker init
+
+
+"typeorm:prod:run-migrations": "npm run typeorm -- migration:run -d dist/src/db/dataSource.js"
+
+1. docker run - Create and start a container from an image.
+
+docker run -d -p 8080:80 nginx
+
+2. docker build - Build an image from a Dockerfile.
+
+docker build -t my-image-name .
+
+
+3. docker images - List all local images.
+
+docker images
+
+
+4. docker ps - List running containers. Use -a to include stopped containers.
+
+docker ps -a
+
+5. docker stop - Stop a running container.
+
+
+docker stop container_id
+
+6. docker rm - Remove one or more containers.
+
+docker rm container_id
+
+7. docker rmi - Remove one or more images.
+
+docker rmi image_id
+
+8. docker logs
+
+docker logs container_id
+
+
+
+docker-compose up - Build and start your project. Use -d to run in detached mode.
+
+docker-compose down
+docker-compose build - Build or rebuild services defined in a docker-compose.yml.
+
+docker-compose build
+docker-compose logs
+
+docker-compose ps

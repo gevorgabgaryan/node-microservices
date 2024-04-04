@@ -1,0 +1,238 @@
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB_NAME}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mynetwork
+
+
+           # MySQL environment variables
+          echo MYSQL_HOST=${{ secrets.MYSQL_HOST }} >> .env
+          echo MYSQL_PORT=${{ secrets.MYSQL_PORT }} >> .env
+          echo MYSQL_DB_NAME=${{ secrets.MYSQL_DB_NAME }} >> .env
+          echo MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }} >> .env
+          echo MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} >> .env
+
+
+
+
+
+
+
+
+          version: '3'
+
+services:
+  main:
+    build:
+      context: ./
+    ports:
+      - "4000:3115"
+    env_file:
+      - .env.prod
+    networks:
+      - mynetwork
+  registry:
+    build:
+      context: ./microservices/registry-service
+    env_file:
+      - .env.prod
+    networks:
+      - mynetwork
+  catalog:
+    build:
+      context: ./microservices/catalog-service
+    depends_on:
+      - mongodb
+    env_file:
+      - .env.prod
+    networks:
+      - mynetwork
+
+  order:
+    build:
+      context: ./microservices/order-service
+    depends_on:
+      - postgres
+      - rabbitmq
+    env_file:
+      - .env.prod
+    networks:
+      - mynetwork
+  auth:
+    build:
+      context: ./microservices/auth-service
+    depends_on:
+       - mongodb
+    env_file:
+      - .env.prod
+    networks:
+      - mynetwork
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: ${TYPEORM_DB_NAME}
+      POSTGRES_USER: ${TYPEORM_USERNAME}
+      POSTGRES_PASSWORD: ${TYPEORM_PASSWORD}
+    ports:
+      - "5532:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mynetwork
+  redis:
+    image: redis:latest
+    networks:
+      - mynetwork
+
+  mongodb:
+    image: mongo:latest
+    env_file:
+      - .env.prod
+    networks:
+      - mynetwork
+    volumes:
+      - mongodb_data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:latest
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - mynetwork
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - auth
+      - catalog
+      - order
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+
+volumes:
+  postgres_data:
+  mongodb_data:
+
+
+
+
+
+worker_processes auto;
+pid /var/run/nginx.pid;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+    access_log /var/log/nginx/access.log main;
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+
+    # Gzip Settings
+    gzip on;
+    gzip_disable "msie6";
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+    # Upstream definitions for microservices
+    upstream auth_service {
+        server auth:PORT_AUTH;
+    }
+
+    upstream catalog_service {
+        server catalog:PORT_CATALOG;
+    }
+
+    upstream order_service {
+        server order:PORT_ORDER; # Replace PORT_ORDER with the actual port for order service
+    }
+
+
+    upstream main {
+        server main:PORT_AUTH;
+    }
+
+    server {
+        listen 80;
+        server_name api.gevorgabgaryan.info;
+
+        # WebSocket endpoint for Auth service
+        location /ws {
+            proxy_pass http://auth_service;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # Auth service HTTP requests
+        location /auth {
+            proxy_pass http://auth_service;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # Catalog service HTTP requests
+        location /catalog {
+            proxy_pass http://catalog_service;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # Order service HTTP requests
+        location /order {
+            proxy_pass http://order_service;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # main
+        location /order {
+            proxy_pass http://order_service;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+}

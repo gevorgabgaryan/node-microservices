@@ -1,0 +1,92 @@
+git clone https://github.com/gevorgabgaryan/express-mong-auth.git
+
+1. npm init -y
+
+2. npm i -D @babel/core @babel/node @babel/preset-env
+
+@babel/core is the core Babel package.
+@babel/node allows you to run Node.js applications with Babel.
+@babel/preset-env is a preset that compiles modern JavaScript down to a version compatible with the target environment (Node.js in this case).
+
+Update package.json Scripts:
+"scripts": {
+  "start": "node -r @babel/register app.js"
+}
+"babel": {
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
+  ]
+}
+
+
+3. npm i dotenv
+
+add .env && .env-example
+PORT=4000
+
+
+config/index.js
+
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+const config = {
+  port: process.env.PORT || 4000,
+};
+
+export default config;
+
+4. .gitignore
+node_modules
+.env
+
+5. npm i express
+
+index.js
+
+import express from 'express';
+import config from './config';
+
+const app = express();
+
+app.get('/', (req, res) => {
+    res.json({message: "Hello world"})
+})
+
+app.listen(config.port, ()=>{
+   console.log(`app start on port ${config.port}`)
+})
+
+6. npm i nodemon -D
+package.json
+"dev": "nodemon -r @babel/register index.js"
+
+7. debugger
+.vscode/launch.json
+
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeArgs": ["-r", "@babel/register"],
+            "program": "${workspaceFolder}/index.js"
+        }
+    ]
+}

@@ -1,0 +1,54 @@
+name: Node.js CD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy_on_dev:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Create customer Env file
+        run: |
+          touch .env
+          echo PORT=${{ secrets.PORT }} >> .env
+          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+          echo JWT_EXPIRE_IN=${{ secrets.JWT_EXPIRE_IN }} >> .env
+          echo MONGO_DB_URL=${{ secrets.MONGO_DB_URL }} >> .env
+          echo MONGO_DB_NAME=${{ secrets.MONGO_DB_NAME }} >> .env
+          echo WS_PORT=${{ secrets.WS_PORT }} >> .env
+          echo REDIS_URL=${{ secrets.REDIS_URL}} >> .env
+          echo "NODE_ENV=production" >> .env
+          # cat .env
+          NODE_ENV=production
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*' -x 'node_modules/*'
+
+      - name: Deploy on Elastic beanstalk DEV Env
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: Node-microservices
+          environment_name: Node-microservices-env
+          version_label: "ver-${{ github.sha }}"
+          region: eu-north-1
+          deployment_package: deploy.zip

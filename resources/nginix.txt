@@ -1,0 +1,917 @@
+ssh ubuntu@8.183.130.221
+ ssh ubuntu@ec2-18-183-130-221.ap-northeast-1.compute.amazonaws.com
+
+
+
+
+
+
+Google API key
+AIzaSyBRKO1UyKGFvDO_v9Ay-npmSMI0fAxtn8s
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+recaptcha entrprice
+https://github.com/googleapis/nodejs-recaptcha-enterprise
+
+https://console.cloud.google.com/security/recaptcha/6LfSRIchAAAAAGozD_7kPgA58bTX8PSEW5uRN30F;interval=P7D?project=youandworldam-359805
+
+6LfSRIchAAAAAGozD_7kPgA58bTX8PSEW5uRN30F
+
+<script src="https://www.google.com/recaptcha/enterprise.js?render=6LdNcochAAAAAHpZT3VjfM1mvWeSXkmuz0TixKe0"></script>
+<script>
+grecaptcha.enterprise.ready(function() {
+    grecaptcha.enterprise.execute('6LdNcochAAAAAHpZT3VjfM1mvWeSXkmuz0TixKe0', {action: 'login'}).then(function(token) {
+       ...
+    });
+});
+</script>
+
+
+
+
+npm run build && node dist/src/index.js
+
+
+
+
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/numerus.youandworld.am &&
+sudo ln -s /etc/nginx/sites-available/numerus.youandworld.am /etc/nginx/sites-enabled/numerus.youandworld.am &&
+sudo nano /etc/nginx/sites-available/numerus.youandworld.am
+ map $http_upgrade $connection_upgrade {
+        default Upgrade;
+        ''      close;
+    }
+
+
+
+
+
+
+
+
+map $http_upgrade $connection_upgrade {
+        default Upgrade;
+        ''      close;
+    }
+
+
+
+
+
+
+
+
+server {
+
+
+
+
+
+
+
+
+server_name numerus.youandworld.am;
+location /ws  {
+ proxy_pass http://localhost:2010;
+ proxy_http_version 1.1;
+ proxy_set_header Upgrade $http_upgrade;
+ proxy_set_header Connection 'upgrade';
+ proxy_set_header Host $host;
+ proxy_cache_bypass $http_upgrade;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+location / {
+proxy_pass http://localhost:8888;
+proxy_http_version 1.1;
+proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection 'upgrade';
+proxy_set_header Host $host;
+proxy_cache_bypass $http_upgrade;
+}
+}
+
+
+
+
+
+
+
+
+
+
+sudo service nginx restart
+
+
+sudo certbot --nginx -d numerus.youandworld.am
+
+
+
+
+
+
+npm run build
+npm run build && node dist/src/index.js
+npm run build  && cp -r assets  dist/assets && node dist/src/index.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/numerus.youandworld.am
+sudo ln -s /etc/nginx/sites-available/numerus.youandworld.am /etc/nginx/sites-enabled/numerus.youandworld.am
+sudo nano /etc/nginx/sites-available/numerus.youandworld.am
+
+
+ map $http_upgrade $connection_upgrade {
+        default Upgrade;
+        ''      close;
+    }
+
+
+
+
+server {
+
+
+
+
+server_name numerus.youandworld.am;
+location /ws  {
+ proxy_pass http://localhost:2010;
+ proxy_http_version 1.1;
+ proxy_set_header Upgrade $http_upgrade;
+ proxy_set_header Connection 'upgrade';
+ proxy_set_header Host $host;
+ proxy_cache_bypass $http_upgrade;
+}
+
+
+
+
+
+
+
+
+location / {
+proxy_pass http://localhost:8888;
+proxy_http_version 1.1;
+proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection 'upgrade';
+proxy_set_header Host $host;
+proxy_cache_bypass $http_upgrade;
+}
+
+
+
+
+
+}
+
+
+  listen 80; # managed by Certbot
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/api.amelie.am/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/api.amelie.am/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+     sudo service nginx restart
+
+
+ sudo certbot --nginx -d numerus.youandworld.am
+
+
+
+
+rm -rf /var/www/youandworld-admin && sudo cp -r  /var/www/youandworld-admin-fe/dist/youandworld-admin    /var/www/youandworld-admin
+
+
+sudo cp /etc/nginx/sites-available/numerus.youandworld.am  /etc/nginx/sites-available/admin.youandworld.am
+
+
+
+
+sudo ln -s /etc/nginx/sites-available/admin.youandworld.am /etc/nginx/sites-enabled/admin.youandworld.am
+
+
+
+
+sudo nano /etc/nginx/sites-available/admin.youandworld.am
+
+
+server {
+
+
+
+        root /var/www/youandworld-admin;
+
+
+        # Add index.php to the list if you are using PHP
+        index index.html index.htm index.nginx-debian.html;
+
+
+        server_name admin.youandworld.am;
+
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ /index.html?/$request_uri;
+        }
+
+
+
+
+
+}
+}
+    sudo service nginx restart
+
+
+ sudo certbot --nginx -d admin.youandworld.am
+
+
+rm -rf /var/www/Youandworld && sudo cp -r  /var/www/youandworld-fe/dist/Youandworld  /var/www/
+
+
+
+
+sudo cp /etc/nginx/sites-available/numerus.youandworld.am  /etc/nginx/sites-available/youandworld.am &&
+sudo ln -s /etc/nginx/sites-available/youandworld.am /etc/nginx/sites-enabled/youandworld.am &&
+sudo nano /etc/nginx/sites-available/youandworld.am
+
+
+
+
+server {
+
+
+
+
+        server_name youandworld.am www.youandworld.am;
+
+
+ location / {
+     proxy_pass http://app_servers_you;
+            proxy_next_upstream error timeout http_500 http_502 http_503 http_504;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+
+
+      sudo service nginx restart
+
+
+ sudo certbot --nginx -d youandworld.am
+
+
+
+
+npm run start-build
+
+
+
+
+
+
+sunny academy
+
+
+
+
+sudo cp /etc/nginx/sites-available/numerus.youandworld.am /etc/nginx/sites-available/numerus.sunnyacademy.am &&
+sudo ln -s /etc/nginx/sites-available/numerus.sunnyacademy.am /etc/nginx/sites-enabled/numerus.sunnyacademy.am &&
+sudo nano /etc/nginx/sites-available/numerus.sunnyacademy.am
+
+
+
+
+sudo service nginx restart
+
+
+ sudo certbot --nginx -d numerus.sunnyacademy.am
+npm run build  && cp -r assets  dist/assets && node dist/src/index.js
+
+
+
+
+sudo cp /etc/nginx/sites-available/numerus.sunnyacademy.am  /etc/nginx/sites-available/sunnyacademy.am
+sudo ln -s /etc/nginx/sites-available/sunnyacademy.am /etc/nginx/sites-enabled/sunnyacademy.am
+sudo nano /etc/nginx/sites-available/sunnyacademy.am
+
+
+
+
+
+
+
+
+server {
+
+
+
+
+
+
+
+
+        server_name sunnyacademy.am www.sunnyacademy.am;
+
+
+
+
+ location / {
+     proxy_pass http://app_servers_you;
+            proxy_next_upstream error timeout http_500 http_502 http_503 http_504;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+
+
+
+
+      sudo service nginx restart
+
+
+
+
+ sudo certbot --nginx -d sunnyacademy.am  -d www.sunnyacademy.am
+
+
+
+
+
+
+
+
+npm run start-build
+
+
+
+
+
+
+
+
+
+
+npm run start-build
+
+
+
+
+
+
+numerussystem
+
+
+
+
+sudo cp /etc/nginx/sites-available/numerus.youandworld.am /etc/nginx/sites-available/numerus.numerussystem.com &&
+sudo ln -s /etc/nginx/sites-available/numerus.numerussystem.com /etc/nginx/sites-enabled/numerus.numerussystem.com &&
+sudo nano /etc/nginx/sites-available/numerus.numerussystem.com
+
+
+sudo service nginx restart
+
+
+sudo certbot --nginx -d numerus.numerussystem.com
+sudo service nginx restart
+
+
+ sudo certbot --nginx -d numerus.sunnyacademy.am
+
+
+npm run build  && cp -r assets  dist/assets && node dist/src/index.js
+
+
+sudo cp /etc/nginx/sites-available/numerus.youandworld.am /etc/nginx/sites-available/sunnyacademy.am &&
+sudo ln -s /etc/nginx/sites-available/sunnyacademy.am /etc/nginx/sites-enabled/sunnyacademy.am &&
+sudo nano /etc/nginx/sites-available/sunnyacademy.am
+
+
+
+
+sudo cp /etc/nginx/sites-available/numerus.numerussystem.com  /etc/nginx/sites-available/numerussystem.com
+sudo ln -s /etc/nginx/sites-available/numerussystem.com /etc/nginx/sites-enabled/numerussystem.com
+sudo nano /etc/nginx/sites-available/numerussystem.com
+
+
+
+
+
+
+
+
+server {
+
+
+
+
+
+
+
+
+        server_name numerussystem.com www.numerussystem.com;
+
+
+
+
+ location / {
+     proxy_pass http://app_servers_you;
+            proxy_next_upstream error timeout http_500 http_502 http_503 http_504;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+
+
+
+
+      sudo service nginx restart
+
+
+
+
+ sudo certbot --nginx -d numerussystem.com
+
+
+
+
+
+
+
+
+npm run start-build
+
+
+sudo cp /etc/nginx/sites-available/numerus.numerussystem.com  /etc/nginx/sites-available/numerussystem.com &&
+sudo ln -s /etc/nginx/sites-available/numerussystem.com /etc/nginx/sites-enabled/numerussystem.com &&
+sudo nano /etc/nginx/sites-available/numerussystem.com
+
+
+
+
+
+
+
+
+server {
+
+
+
+
+
+
+
+
+        server_name numerussystem.com www.numerussystem.com;
+
+
+
+
+ location / {
+     proxy_pass http://app_servers_you;
+            proxy_next_upstream error timeout http_500 http_502 http_503 http_504;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+
+
+
+
+      sudo service nginx restart
+
+
+
+
+ sudo certbot --nginx -d numerussystem.com
+
+
+
+
+
+
+
+
+160.153.128.27
+
+
+start
+npm run start:dev
+
+
+
+
+
+
+npm run build
+
+
+
+npm run build && node dist/src/index.js
+y
+
+
+
+
+
+
+next-js
+
+npm run build
+
+
+
+
+
+
+    sudo cp /etc/nginx/sites-available/numerus.youandworld.am /etc/nginx/sites-available/page.youandworld.am
+
+
+sudo ln -s /etc/nginx/sites-available/page.youandworld.am /etc/nginx/sites-enabled/page.youandworld.am
+sudo nano /etc/nginx/sites-available/page.youandworld.am
+
+
+
+server {
+  listen 80;
+  server_name page.youandworld.am;
+
+  location / {
+    proxy_pass http://localhost:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+
+sudo service nginx restart  # Ubuntu, Debian
+
+ sudo certbot --nginx -d page.youandworld.am
+
+
+
+
+
+
+
+
+
+next js how build every day for new articles
+ChatGPT
+To build your Next.js application every day for new articles, you can set up a scheduled task or a cron job to trigger the build process automatically. Here's a general outline of the steps involved:
+Set up a build script: Create a script in your Next.js project that triggers the build process. This script should run the necessary commands to build the application, such as npm run build or yarn build. Make sure this script is working correctly by running it manually and verifying that the build process completes successfully.
+Configure a scheduled task or cron job: The method for setting up a scheduled task or cron job depends on your operating system or hosting environment. Here are some general steps:
+Linux/MacOS: Use the cron command to schedule a recurring task. Run the following command in your terminal:
+crontab -e
+
+
+This will open the cron configuration file. Add a new line to schedule the task:
+javascript
+0 0 * * * /path/to/your/build/script.sh
+This configuration will trigger the build script every day at midnight (00:00).
+Windows: Use the Task Scheduler utility to create a new task. Open the Task Scheduler, create a new task, and configure it to run your build script at the desired time every day.
+Cloud-based hosting: If your Next.js application is hosted on a cloud platform like AWS, Google Cloud, or Azure, check the documentation for the specific service on how to schedule recurring tasks or cron jobs. Each platform has its own way of setting up scheduled tasks.
+Test the scheduled build: After setting up the scheduled task or cron job, wait for the scheduled time and check if the build process is triggered automatically. You can monitor the logs or output of the build script to ensure it runs successfully.
+By configuring a scheduled task or cron job to run your build script daily, you can automate the process of updating your Next.js application with new articles or content. Remember to consider factors like time zones, server availability, and any additional configuration specific to your hosting environment or deployment setup.
+
+
+how create script should run the necessary commands to build the application, such as npm run build
+ChatGPT
+To create a script that runs the necessary commands to build your Next.js application, you can follow these steps:
+Open your project's root directory: Open a terminal or command prompt and navigate to the root directory of your Next.js project.
+Create a new script file: Create a new file in the root directory and give it a descriptive name, such as build-script.sh (for Unix-based systems) or build-script.bat (for Windows systems).
+Open the script file in a text editor: Open the newly created script file in a text editor.
+Write the build script: Depending on your package manager (npm or Yarn), use the appropriate command to build your Next.js application. Here are the commands you can use:
+For npm: Add the following line to your script file:
+bash
+#!/bin/sh
+npm run build
+
+
+For Yarn: Add the following line to your script file:
+bash
+#!/bin/sh
+yarn build
+
+
+Save the file after adding the script.
+Grant execution permissions (for Unix-based systems): If you're using a Unix-based system (Linux, macOS), you may need to grant execution permissions to the script file. Run the following command in the terminal:
+bash
+chmod +x build-script.sh
+This command ensures that the script file has the necessary permissions to be executed.
+Test the script: To test the script, you can run it manually. Open a terminal or command prompt in the root directory of your project and execute the script:
+For Unix-based systems:
+bash
+./build-script.sh
+
+
+For Windows systems:
+build-script.bat
+
+
+The script will execute the build command (npm run build or yarn build), initiating the build process for your Next.js application.
+Ensure that the script runs successfully and generates the expected build output without any errors. If there are any issues, double-check your package.json or yarn.lock file, dependencies, and build configuration.
+With the script created, you can use it in conjunction with a scheduled task or cron job, as mentioned in the previous response, to automate the build process for your Next.js application.
+
+
+
+
+
+
+
+
+
+
+0947* /Users/alternate/Desktop/terahertz/Projects/youandworldam/youandworld-restructure/build-script.sh
+
+
+To create a cron job for your build script file and change the period at which it runs, you can follow these steps:
+Open a terminal or command prompt.
+Enter the following command to open the crontab file for editing:
+crontab -e
+
+
+If prompted to select an editor, choose your preferred text editor.
+In the crontab file, add a new line to schedule the cron job. The general format of a cron job entry consists of six fields that define the timing of the job. The fields represent minute, hour, day of the month, month, day of the week, and the command to be executed, respectively. Here's an example to run the cron job daily at 1:00 AM:
+javascript
+0 1 * * * /path/to/your/build-script.sh
+Replace /path/to/your/build-script.sh with the actual path to your build script file.
+To change the period, modify the first five fields accordingly. For example, to run the cron job every hour, use * * * * * (every minute) or 0 * * * * (at the start of every hour). Refer to the cron syntax for more options and flexibility.
+Save the crontab file and exit the text editor.
+The cron job is now scheduled to run according to the specified period. Make sure to adjust the timing and frequency based on your requirements.
+It's important to note that the exact steps for creating cron jobs may vary depending on your operating system and hosting environment. The above instructions assume a Unix-like system. If you're using a different operating system, such as Windows, the process may differ.
+Also, ensure that the path to your build script file is accurate, and the script has the necessary permissions to execute. Test the cron job to verify that it runs as expected and triggers the build process at the desired interval.
+
+
+vin file how edit
+ChatGPT
+If you're referring to editing a VIN (Vehicle Identification Number) file, it's important to note that VINs are unique identifiers assigned to vehicles and should not be modified or tampered with. The VIN provides important information about the vehicle's manufacturer, model, year, and other details.
+If you have a legitimate reason to update or modify vehicle information associated with a VIN, such as correcting an error or updating ownership details, you should contact the appropriate authorities, such as your local Department of Motor Vehicles (DMV) or vehicle registration agency. They will guide you through the proper process for making any necessary changes to the VIN records.
+It's crucial to handle VIN information responsibly and ensure that it remains accurate and consistent across all documentation and records. Modifying a VIN without proper authorization or for fraudulent purposes is illegal and can have serious consequences.
+If your question pertains to a different type of file or if you require assistance with a specific task related to VINs, please provide more details, and I'll be happy to help further.
+
+
+vim file
+ChatGPT
+If you're referring to editing a file using the Vim text editor, here are the basic steps to open, edit, and save a file using Vim:
+Open the file: Open a terminal or command prompt and navigate to the directory where the file is located. Use the cd command to change directories if needed. To open the file with Vim, run the following command:
+vim filename
+Replace filename with the name of the file you want to edit.
+Enter edit mode: By default, Vim opens in command mode. To enter edit mode and start making changes to the file, press the i key. You should see -- INSERT -- at the bottom of the Vim screen, indicating that you're in insert mode.
+Make edits to the file: In insert mode, you can type and edit the contents of the file. Use the arrow keys or navigate using the h, j, k, and l keys for left, down, up, and right movement, respectively. Make the necessary changes to the file.
+Save and exit: Once you're done editing the file, you need to save and exit Vim. Press the Esc key to switch from insert mode to command mode. Then, type :wq (colon, w, q) and press Enter to save the changes and exit Vim. If you want to discard the changes and exit without saving, you can use :q! instead.
+These are the basic steps for editing a file with Vim. However, Vim is a powerful text editor with numerous features and commands. If you want to explore more advanced functionality or learn about specific commands, there are many online resources and tutorials available to help you further.
+52 9 * * * /Users/alternate/Desktop/terahertz/Projects/youandworldam/youandworld-restructure/build-script.sh
+
+
+To run a cron job every two minutes, you can use the following cron expression:
+bash
+*/2 * * * * /Users/alternate/Desktop/terahertz/Projects/youandworldam/youandworld-restructure/build-script.sh
+
+
+In this expression, */2 represents the minutes field, which means "every 2 minutes". The remaining fields are represented by asterisks (*), indicating that any value is acceptable for the hour, day of the month, month, and day of the week.
+Save the corrected expression and set up the cron job again using the revised timing. The cron job will now execute the specified command (/Users/alternate/Desktop/terahertz/Projects/youandworldam/youandworld-restructure/build-script.sh) every two minutes.
+
+
+AMELIE
+
+
+
+
+sudo cp /etc/nginx/sites-available/gevorgabgaryan.info /etc/nginx/sites-available/amelie.am &&
+sudo ln -s /etc/nginx/sites-available/amelie.am /etc/nginx/sites-enabled/amelie.am &&
+sudo nano /etc/nginx/sites-available/amelie.am
+
+
+server {
+
+
+
+
+        root /var/www/sunny-fe;
+
+
+        # Add index.php to the list if you are using PHP
+        index index.html index.htm index.nginx-debian.html;
+
+
+        server_name amelie.am www.amelie.am;
+
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ /index.html?/$request_uri;
+        }
+}
+
+
+
+
+sudo service nginx restart
+
+
+
+
+ sudo certbot --nginx -d amelie.am -d www.amelie.am
+
+
+SunnyAcademy
+
+
+
+
+sudo cp /etc/nginx/sites-available/amelie.am  /etc/nginx/sites-available/sunnyacademy.am
+sudo ln -s /etc/nginx/sites-available/sunnyacademy.am /etc/nginx/sites-enabled/sunnyacademy.am
+sudo nano /etc/nginx/sites-available/sunnyacademy.am
+
+
+server {
+
+
+
+
+        root /var/www/amelie;
+
+
+        # Add index.php to the list if you are using PHP
+        index index.html index.htm index.nginx-debian.html;
+
+
+        server_name sunnyacademy.am www.sunnyacademy.am;
+
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ /index.html?/$request_uri;
+        }
+}
+
+
+
+
+sudo service nginx restart
+
+
+
+
+ sudo certbot --nginx -d sunnyacademy.am -d www.sunnyacademy.am
+
+
+
+
+Numerus
+
+
+
+
+sudo cp /etc/nginx/sites-available/amelie.am  /etc/nginx/sites-available/numerussystem.com
+sudo ln -s /etc/nginx/sites-available/numerussystem.com /etc/nginx/sites-enabled/numerussystem.com
+sudo nano /etc/nginx/sites-available/numerussystem.com
+
+
+server {
+
+
+
+
+        root /var/www/numerus-fe;
+
+
+        # Add index.php to the list if you are using PHP
+        index index.html index.htm index.nginx-debian.html;
+
+
+        server_name numerussystem.com www.numerussystem.com;
+
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ /index.html?/$request_uri;
+        }
+}
+
+
+
+
+sudo service nginx restart
+
+
+
+
+ sudo certbot --nginx -d numerussystem.com -d www.numerussystem.com
+
+
+
+
+Gev-org
+
+
+sudo cp /etc/nginx/sites-available/youandworld.am  /etc/nginx/sites-available/gevorgabgaryan.info &&
+sudo ln -s /etc/nginx/sites-available/gevorgabgaryan.info /etc/nginx/sites-enabled/gevorgabgaryan.info &&
+sudo nano /etc/nginx/sites-available/gevorgabgaryan.info
+
+
+server {
+
+
+
+
+        root /var/www/gev-org.com;
+
+
+        # Add index.php to the list if you are using PHP
+        index index.html index.htm index.nginx-debian.html;
+
+
+        server_name gev-org.com www.gev-org.com;
+
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ /index.html?/$request_uri;
+        }
+}
+
+
+
+
+sudo service nginx restart
+
+
+
+
+ sudo certbot --nginx -d gevorgabgaryan.info  -d gevorgabgaryan.info
+
+
+
+
+sudo ln -s /etc/nginx/sites-available/api.gevorgabgaryan.info /etc/nginx/sites-enabled/api.gevorgabgaryan.info
+
+

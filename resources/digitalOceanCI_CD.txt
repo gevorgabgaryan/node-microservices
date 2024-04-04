@@ -1,0 +1,11 @@
+Step 1: Create a DigitalOcean Droplet
+Log in to your DigitalOcean account.
+Create a new Droplet. Choose an image that has Docker installed or select a base image (like Ubuntu) and install Docker and Docker Compose yourself.
+Choose a plan that fits your needs.
+Select a datacenter region.
+Add any additional options like monitoring or backups as needed.
+Choose or add your SSH keys for secure access to your Droplet.
+   ssh-keygen
+   cat ~/.ssh/id_rsa.pub
+   cat ~/.ssh/id_rsa
+Finalize and create the Droplet.

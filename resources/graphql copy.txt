@@ -91,92 +91,42 @@ package.json
     ]
 }
 
-8. npm i @apollo/server graphql @apollo/server
+8. npm i graphql express-graphql
 
 
-
-resolvers/index.js
-
-const resolvers = {
-    Query: {
-      hello: () => 'Hello world',
-    },
-  };
-
-export default resolvers;
-
-
-
-schemas/index.js
-
+data/schema.js
 
 import { buildSchema } from "graphql";
 
-const schemas = buildSchema(`
+const schema = buildSchema(`
     type Query {
         hello: String
     }
 `)
 
-export default schemas;
-
-
-API/index.js
-
-import { ApolloServer } from '@apollo/server';
-import { startStandaloneServer } from '@apollo/server/standalone';
-import config from '../config';
-import schemas from '../schemas';
-import resolvers from '../resolvers';
-
-const port = config.port
-
-const server = new ApolloServer({
-    typeDefs : schemas,
-    resolvers : resolvers,
-    introspection : true
-  });
-
-
-class API {
-  static async init() {
-    startStandaloneServer(server, { listen: { port} });
-    console.log(`Server is listening on port ${port}`);
-  }
-}
-
-export default API;
+export default schema;
 
 index.js
 
-import API from "./API"
+import { graphqlHTTP } from 'express-graphql';
+import schema from './data/schema';
 
-(async ()=>{
-    try{
-     await API.init();
-    } catch(e) {
-        console.log(e)
-    }
-})()
+
+
+const root = { hello: () => 'Hello world'};
+
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  root: root,
+  graphiql: true,
+}));
+
 
 http://localhost:8000/graphql
 
 query {
   hello
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 data/schema.js
 

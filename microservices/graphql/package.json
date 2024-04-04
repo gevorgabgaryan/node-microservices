@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -r @babel/register index.js",
+    "start": "node -r @babel/register index.js",
     "dev": "nodemon -r @babel/register index.js"
   },
   "keywords": [],
@@ -29,9 +29,9 @@
     ]
   },
   "dependencies": {
+    "@apollo/server": "^4.10.2",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "express-graphql": "^0.12.0",
     "graphql": "^16.8.1"
   }
 }

@@ -90,3 +90,188 @@ package.json
         }
     ]
 }
+
+8. npm i graphql express-graphql
+
+
+data/schema.js
+
+import { buildSchema } from "graphql";
+
+const schema = buildSchema(`
+    type Query {
+        hello: String
+    }
+`)
+
+export default schema;
+
+index.js
+
+import { graphqlHTTP } from 'express-graphql';
+import schema from './data/schema';
+
+
+
+const root = { hello: () => 'Hello world'};
+
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  root: root,
+  graphiql: true,
+}));
+
+
+http://localhost:8000/graphql
+
+query {
+  hello
+}
+
+data/schema.js
+
+const schema = buildSchema(`
+    type Product {
+        id: ID
+        sku: String,
+        name: String,
+        price: Float,
+        discountPercentage: Float,
+    }
+    type Query {
+        product: Product
+    }
+`)
+
+
+
+index.js
+
+const root = { product: () => {
+    return {
+        id: 1,
+        sku: 'Product1',
+        name: 'Product1',
+        price: 100,
+        discountPercentage: 10,
+    }
+}};
+
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  rootValue: root,
+  graphiql: true,
+}));
+
+http://localhost:8000/graphql
+
+query {
+  product {
+    id
+    name
+    price
+  }
+}
+
+
+
+data/resolvers.js
+
+
+class Product {
+    constructor(id, { name, sku, price, discount}) {
+        this.id = id;
+        this.name = name;
+        this.sku = sku;
+        this.price = price;
+        this.discount = discount;
+     }
+}
+
+const productDatabase = {};
+
+const resolvers = {
+    getProduct: ({ id }) => {
+        return new Product(id, productDatabase[id]);
+    },
+    createProduct: ({ input }) => {
+        let id = require('crypto').randomBytes(10).toString('hex');
+        productDatabase[id] = input;
+        return new Product(id, input);
+    }
+}
+
+export default resolvers;
+
+
+data/schema.js
+
+
+import { buildSchema } from "graphql";
+
+const schema = buildSchema(`
+    type Product {
+        id: ID
+        sku: String,
+        name: String,
+        price: Float,
+        discountPercentage: Float,
+    }
+
+    type Query {
+        getProduct(id: ID): Product
+    }
+
+    input StoreInput {
+        store: String
+    }
+
+    input ProductInput {
+        id: ID
+        sku: String,
+        name: String,
+        price: Float,
+        discountPercentage: Float,
+    }
+
+    type Mutation {
+        createProduct(input: ProductInput): Product
+    }
+`);
+
+export default schema;
+
+
+
+index.js
+
+
+app.use('/graphql', graphqlHTTP({
+    schema: schema,
+    rootValue: resolvers,
+    graphiql: true,
+}));
+
+
+http://localhost:8000/graphql
+
+mutation {
+  createProduct(input: {
+        sku: "sku1",
+        name: "product1",
+        price: 100,
+        discountPercentage: 20,
+  }) {
+    id,
+    name
+  }
+}
+
+
+query {
+  getProduct (id: "18d1a8f574883de410b2") {
+    id
+    name
+    price
+  }
+}

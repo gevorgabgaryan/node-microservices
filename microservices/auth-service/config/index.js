@@ -18,6 +18,11 @@ const Config = {
     password: process.env.MAIL_PASSWORD,
   },
   JWTSecret: 'secret',
+  monitor: {
+    route: process.env.MONITOR_ROUTE,
+    user: process.env.MONITOR_USER,
+    password: process.env.MONITOR_PASSWORD
+  }
 }
 
 export default Config

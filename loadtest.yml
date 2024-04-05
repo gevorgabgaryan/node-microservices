@@ -1,0 +1,14 @@
+config:
+  target: 'http://localhost:4002'
+  phases:
+    - duration: 60
+      arrivalRate: 1000
+
+scenarios:
+  - name: "Register user with unique email"
+    flow:
+      - post:
+          url: "/login"
+          json:
+            email: "gevorg.gak4@gmail.com"
+            password: "Ga123456"

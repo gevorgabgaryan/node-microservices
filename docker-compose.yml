@@ -8,7 +8,8 @@ services:
       - mongodb
     networks:
       - mynetwork
-
+    ports:
+     - "5050:4001"
   auth:
     build:
       context: ./microservices/auth-service

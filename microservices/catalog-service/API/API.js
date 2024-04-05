@@ -10,18 +10,19 @@ import helmet from 'helmet'
 import { responseSender } from '../utils/util'
 import { CustomError } from '../shared/error'
 import { promisifyAPI } from '../middlewares/promisify'
-import ProductService from '../serveces/ProductService';
+import { monitorMiddleware } from '../middlewares/MonitorMiddlware';
 
 class API {
   static async init () {
     const app = express()
+    app.use(monitorMiddleware());
     app.use(promisifyAPI())
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
     app.use(helmet())
     app.use(cors())
     app.use(requestLogger)
-    app.use('/product', apiRoutes)
+    app.use('/products', apiRoutes)
 
     app.use((req, res) => {
       const message = {

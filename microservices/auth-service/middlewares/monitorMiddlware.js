@@ -1,23 +1,3 @@
-npm i express-status-monitor express-basic-auth
-
-const monitor = require('express-status-monitor');
-const basicAuth = require('express-basic-auth');
-
-config
-
-monitor: {
-    route: process.env.MONITOR_ROUTE,
-    user: process.env.MONITOR_USER,
-    password: process.env.MONITOR_PASSWORD
-}
-
-
-MONITOR_ROUTE=/monitor
-MONITOR_USER=admin
-MONITOR_PASSWORD=1234
-
-
-
 import monitor from 'express-status-monitor';
 import basicAuth from 'express-basic-auth';
 import config from '../config';
@@ -43,30 +23,3 @@ export function monitorMiddleware() {
 
     return [statusMonitorMiddleware.middleware, serveStatusPageMiddleware];
 }
-
-
-API.js
-
-import { monitorMiddleware } from '../middlewares/MonitorMiddlware';
-
-app.use(monitorMiddleware());
-
-
-npm install -g artillery
-
-config:
-  target: 'http://localhost
-  phases:
-    - duration: 60
-      arrivalRate: 1000
-
-scenarios:
-  - name: "Register user with unique email"
-    flow:
-      - post:
-          url: "/auth/login"
-          json:
-            email: "gevorg.gak4@gmail.com"
-            password: "Ga123456"
-
-artillery run test.yml

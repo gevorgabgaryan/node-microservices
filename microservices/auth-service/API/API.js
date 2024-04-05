@@ -1,5 +1,4 @@
 import express from 'express';
-import axios from 'axios';
 import { createServer } from 'http'
 import Config from '../config'
 import apiRoutes from '../routes'
@@ -10,10 +9,12 @@ import helmet from 'helmet'
 import { responseSender } from '../utils/'
 import { CustomError } from '../shared/error'
 import { promisifyAPI } from '../middlewares/promisify'
+import { monitorMiddleware } from '../middlewares/monitorMiddlware';
 
 class API {
   static async init () {
     const app = express()
+    app.use(monitorMiddleware());
     app.use(promisifyAPI())
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))

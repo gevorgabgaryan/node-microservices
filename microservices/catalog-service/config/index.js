@@ -14,6 +14,11 @@ const Config = {
   messageBroker: {
     url: process.env.MESSAGE_BROKER_URL,
     channel: null
+  },
+  monitor: {
+    route: process.env.MONITOR_ROUTE,
+    user: process.env.MONITOR_USER,
+    password: process.env.MONITOR_PASSWORD
   }
 }
 

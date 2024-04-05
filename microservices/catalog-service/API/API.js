@@ -10,7 +10,7 @@ import helmet from 'helmet'
 import { responseSender } from '../utils/util'
 import { CustomError } from '../shared/error'
 import { promisifyAPI } from '../middlewares/promisify'
-import { monitorMiddleware } from '../middlewares/MonitorMiddlware';
+import { monitorMiddleware } from '../middlewares/monitorMiddlware';
 
 class API {
   static async init () {

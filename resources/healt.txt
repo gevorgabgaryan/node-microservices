@@ -69,4 +69,4 @@ scenarios:
             email: "gevorg.gak4@gmail.com"
             password: "Ga123456"
 
-artillery run test.yml
+artillery run loadtest.yml

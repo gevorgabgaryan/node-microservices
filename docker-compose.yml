@@ -32,6 +32,8 @@ services:
       - mynetwork
     volumes:
       - mongodb_data:/data/db
+    ports:
+     - "27027:27017"
 
   nginx:
     build: ./proxy/

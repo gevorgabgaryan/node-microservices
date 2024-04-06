@@ -19,7 +19,7 @@ jobs:
           ssh -o "StrictHostKeyChecking=no" ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} "
             if [ ! -d node-microservices ]; then
               echo 'node-microservices directory does not exist. Cloning...'
-              git clone git@github.com:gevorgabgaryan/node-microservices.git node-microservices
+              git clone https://github.com/gevorgabgaryan/node-microservices.git node-microservices
             fi
             echo 'Creating .env file...'
             cd node-microservices &&
@@ -79,7 +79,7 @@ jobs:
               echo 'Deployment complete.'
             else
               echo 'node-microservices is not a valid Git repository. Cloning...'
-              git clone git@github.com:gevorgabgaryan/node-microservices.git node-microservices
+              git clone https://github.com/gevorgabgaryan/node-microservices.git node-microservices
               cd node-microservices &&
               docker-compose up --build -d
               echo 'Deployment complete.'

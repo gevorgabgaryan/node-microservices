@@ -57,6 +57,9 @@ jobs:
                   echo \"MONGO_DB_NAME=${{ secrets.MONGO_DB_NAME }}\" >> .env
                   echo \"WS_PORT=${{ secrets.WS_PORT }}\" >> .env
                   echo \"REDIS_URL=${{ secrets.REDIS_URL }}\" >> .env
+                  echo \"MONITOR_ROUTE=${{ secrets.MONITOR_ROUTE }}\" >> .env
+                  echo \"MONITOR_USER=${{ secrets.MONITOR_USER }}\" >> .env
+                  echo \"MONITOR_PASSWORD =${{ secrets.MONITOR_PASSWORD }}\" >> .env
                   echo \"NODE_ENV=production\" >> .env
                   echo '.env file created and populated for ' \"\$service\"
                 fi
